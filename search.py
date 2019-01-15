@@ -6,12 +6,13 @@ from bs4 import BeautifulSoup
 from fuzzywuzzy import fuzz
 from sphinx.util.inventory import InventoryFile
 
-from util import ARROW_CHARACTER, DEFAULT_REPO, GITHUB_URL
+from util import ARROW_CHARACTER, DEFAULT_REPO, GITHUB_URL, BOOK_STORE
 
 DOCS_URL = "https://python-telegram-bot.readthedocs.io/en/latest/"
 OFFICIAL_URL = "https://core.telegram.org/bots/api"
 PROJECT_URL = urljoin(GITHUB_URL, DEFAULT_REPO + '/')
 WIKI_URL = urljoin(PROJECT_URL, "wiki/")
+BOOK_URL = urljoin(PROJECT_URL, "?s=")
 WIKI_CODE_SNIPPETS_URL = urljoin(WIKI_URL, "Code-snippets")
 EXAMPLES_URL = urljoin(PROJECT_URL, 'tree/master/examples/')
 
@@ -34,9 +35,11 @@ class BestHandler:
 class Search:
     def __init__(self):
         self._docs = {}
+        self._book = {}
         self._official = {}
         self._wiki = OrderedDict()  # also examples
         self.parse_docs()
+        self.parse_book()
         self.parse_official()
         # Order matters since we use an ordered dict
         self.parse_wiki()
@@ -63,7 +66,19 @@ class Search:
                 if li.a['href'] != '#':
                     name = f'{category} {ARROW_CHARACTER} {li.a.text.strip()}'
                     self._wiki[name] = urljoin(WIKI_URL, li.a['href'])
+             
 
+
+    def parse_book(self):
+        book_soup = BeautifulSoup(urlopen(BOOK_URL), "html.parser")
+
+        # Parse main pages from custom sidebar
+        for ol in book_soup.select("div.body > main"):
+            category = ol.find_previous_sibling('article')
+            for li in ol.select('h2'):
+                if li.a['href'] != '#':
+                    name = f'{category} {ARROW_CHARACTER} {li.a.text.strip()}'
+                    self._book[name] = urljoin(BOOK_URL, li.a['href'])
     def parse_wiki_code_snippets(self):
         code_snippet_soup = BeautifulSoup(urlopen(WIKI_CODE_SNIPPETS_URL), 'html.parser')
         for h4 in code_snippet_soup.select('div.wiki-body h4'):
