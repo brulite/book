@@ -10,6 +10,7 @@ from telegram import ParseMode
 
 ARROW_CHARACTER = '➜'
 GITHUB_URL = "https://github.com/"
+BOOK_STORE = "http://allitebooks.com/"
 DEFAULT_REPO_OWNER = 'python-telegram-bot'
 DEFAULT_REPO_NAME = 'python-telegram-bot'
 DEFAULT_REPO = f'{DEFAULT_REPO_OWNER}/{DEFAULT_REPO_NAME}'
