@@ -4,3 +4,5 @@ python-Levenshtein
 python-telegram-bot
 Sphinx
 requests
+lxml
+cherrypy
