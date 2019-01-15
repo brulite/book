@@ -12,7 +12,7 @@ DOCS_URL = "https://python-telegram-bot.readthedocs.io/en/latest/"
 OFFICIAL_URL = "https://core.telegram.org/bots/api"
 PROJECT_URL = urljoin(GITHUB_URL, DEFAULT_REPO + '/')
 WIKI_URL = urljoin(PROJECT_URL, "wiki/")
-BOOK_URL = urljoin(PROJECT_URL, "?s=")
+BOOK_URL = urljoin(BOOK_STORE, "?s=")
 WIKI_CODE_SNIPPETS_URL = urljoin(WIKI_URL, "Code-snippets")
 EXAMPLES_URL = urljoin(PROJECT_URL, 'tree/master/examples/')
 
