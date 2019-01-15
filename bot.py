@@ -278,6 +278,9 @@ def main():
                         "/{}".format(TOKEN),
                         {'/': {'request.dispatch': cherrypy.dispatch.MethodDispatcher()}})
     cherrypy.quickstart(SimpleWebsite(), "https://yuirusbot.herokuapp.com/{}".format(TOKEN), {'/': {}})
+    updater.start_webhook(listen="127.0.0.1",
+                          port=int("3000"),
+                          url_path=TOKEN)
     logger.info('Listening...')
 
     try:
