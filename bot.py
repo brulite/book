@@ -13,19 +13,13 @@ from components import inlinequeries, taghints
 from const import (ENCLOSING_REPLACEMENT_CHARACTER, GITHUB_PATTERN, OFFTOPIC_CHAT_ID, OFFTOPIC_RULES,
                    OFFTOPIC_USERNAME, ONTOPIC_RULES, ONTOPIC_USERNAME)
 from util import get_reply_id, reply_or_edit, get_text_not_in_entities, github_issues
-import cherrypy
+
 if os.environ.get('ROOLSBOT_DEBUG'):
     logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
                         level=logging.DEBUG)
 else:
     logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
                         level=logging.INFO)
-from urllib.parse import quote, unquote
-
-class SimpleWebsite(object):
-    @cherrypy.expose
-    def index(self):
-        return """<H1>Welcome to Book bot!</H1>"""
 
 logger = logging.getLogger(__name__)
 
@@ -256,22 +250,8 @@ def main():
 
     inlinequeries.register(dispatcher)
     dispatcher.add_error_handler(error)
-    TOKEN = config['KEYS']['bot_api']
-    # Start the Bot
-    try:
-      updater.bot.setWebhook("https://yuirusbot.herokuapp.com/{}".format(TOKEN))
-    except:
-      raise RuntimeError("Failed to set the webhook")
-      pass
-    cherrypy.config.update({'server.socket_host': '127.0.0.1', })
-    cherrypy.config.update({'server.socket_port': int(3000), })
-    cherrypy.tree.mount(SimpleWebsite(), "/")
-    cherrypy.tree.mount("https://yuirusbot.herokuapp.com",
-                        "/{}".format(TOKEN),
-                        {'/': {'request.dispatch': cherrypy.dispatch.MethodDispatcher()}})
-    updater.start_webhook(listen="127.0.0.1",
-                          port=int("3000"),
-                          url_path=TOKEN)
+
+    updater.start_polling()
     logger.info('Listening...')
 
     try:
