@@ -25,15 +25,7 @@ from urllib.parse import quote, unquote
 class SimpleWebsite(object):
     @cherrypy.expose
     def index(self):
-        if 'content-length' in cherrypy.request.headers and \
-                'content-type' in cherrypy.request.headers and \
-                cherrypy.request.headers['content-type'] == 'application/json':
-            length = int(cherrypy.request.headers['content-length'])
-            json_string = cherrypy.request.body.read(length).decode("utf-8")
-            return """<H1>Welcome to Book bot!</H1>"""
-        else:
-            raise cherrypy.HTTPError(403)
-        
+        return """<H1>Welcome to Book bot!</H1>"""
 
 logger = logging.getLogger(__name__)
 
@@ -265,7 +257,7 @@ def main():
     inlinequeries.register(dispatcher)
     dispatcher.add_error_handler(error)
     TOKEN = config['KEYS']['bot_api']
-
+    # Start the Bot
     try:
       updater.bot.setWebhook("https://yuirusbot.herokuapp.com/{}".format(TOKEN))
     except:
@@ -277,7 +269,6 @@ def main():
     cherrypy.tree.mount("https://yuirusbot.herokuapp.com",
                         "/{}".format(TOKEN),
                         {'/': {'request.dispatch': cherrypy.dispatch.MethodDispatcher()}})
-    cherrypy.quickstart(SimpleWebsite(), "https://yuirusbot.herokuapp.com/{}".format(TOKEN), {'/': {}})
     updater.start_webhook(listen="127.0.0.1",
                           port=int("3000"),
                           url_path=TOKEN)
